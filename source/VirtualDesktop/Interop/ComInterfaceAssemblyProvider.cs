@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Text;
 using System.Text.RegularExpressions;
 using WindowsDesktop.Properties;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace WindowsDesktop.Interop
 {
@@ -135,7 +134,8 @@ namespace WindowsDesktop.Interop
 			var result = compilation.Emit(path);
 			if (result.Success)
 			{
-				return AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+				byte[] data = System.IO.File.ReadAllBytes(path);
+				return Assembly.Load(data);
 			}
 
 			File.Delete(path);
